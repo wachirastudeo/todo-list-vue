@@ -57,6 +57,15 @@ export default {
 
 
   <div v-if="IsLoading">
+    <transition
+      name="fade"
+      enter-active-class="transition ease-in-out duration-500"
+      leave-active-class="transition ease-in-out duration-500"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-500"
+      leave-from-class="opacity-500"
+      leave-to-class="opacity-0"
+    >
     <div v-if="IsSeccess" role="alert" class="ease-in-out duration-300 alert alert-success ">
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -71,6 +80,9 @@ export default {
   </svg>
   <span>Update success!</span>
 </div>
+
+</transition>
+
 
 
 <div class="w-1/2 mx-auto">
