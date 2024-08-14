@@ -22,6 +22,8 @@ export const useTodoStore = defineStore('todo', {
       try {
         const response = await axios.get(`${BASE_URL}/todos/${id}`);
         this.selectedTodo = response.data;
+        console.log(this.selectedTodo);
+
       } catch (error) {
         console.error('Failed to load todo:', error);
       }
