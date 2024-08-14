@@ -30,6 +30,21 @@ export default {
       await todoStore.removeTodo(todoId);
       await todoStore.loadTodos();
     };
+    const changStatus = async(event,todoId)=>{
+        try {
+            if(event.target.checked){
+            await todoStore.editTodo({status: 'Done'},todoId);
+            
+        }else{
+            await todoStore.editTodo({status: 'Doing'},todoId);
+        }
+        await todoStore.loadTodos();
+        } catch (error) {
+            
+        }
+       
+
+    }
     return {
       todoStore,
       todoText,
@@ -37,6 +52,7 @@ export default {
       editStatus,
       deleteTodo,
       IsLoading,
+      changStatus,
     };
   },
 };
@@ -57,9 +73,9 @@ export default {
   </div>
 
   <div class="flex items-center justify-between my-2" v-for="todo in todoStore.list" :key="todo.id">
-    <input type="checkbox" :checked="todo.status=='Done'" class="checkbox"  />
+    <input type="checkbox" :checked="todo.status=='Done'" class="checkbox" @change="changStatus($event,todo.id)" />
 
-    <div >{{ todo.name }} </div>
+    <div :class="todo.status=='Done'? 'line-through':''">{{ todo.name }} </div>
   <div>
     <RouterLink :to="{ name: 'todo-edit', params: { id: todo.id } }">
       <button class="btn btn-square btn-outline ml-2">
