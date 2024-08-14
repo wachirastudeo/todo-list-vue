@@ -1,15 +1,17 @@
 <script>
 import { onMounted, ref } from "vue";
 import { useTodoStore } from "../stores/todo";
-
+import { RouterLink} from 'vue-router';
 export default {
     setup() {
         const todoStore = useTodoStore();
         const todoText = ref("");
+        const IsLoading = ref(false);
 
         onMounted(async () => {
+            IsLoading.value = true;
             await todoStore.loadTodos();
-            console.log(todoStore.list);
+            IsLoading.value=false;
         });
 
         const addTodo = async (todoText) => {
@@ -35,12 +37,17 @@ export default {
             addTodo,
             editStatus,
             deleteTodo,
+            IsLoading,
+
         };
     },
 };
 </script>
 
 <template>
+    <div v-if="IsLoading">
+        <h2>Loading</h2>
+    </div>
     <div>
         <input type="text" v-model="todoText" />
         <button @click="addTodo(todoText)">Add</button>
@@ -57,7 +64,7 @@ export default {
                     </option>
                 </select>
 
-                <button>Edit</button>
+               <RouterLink :to="{name:'todo-edit',params: { id: todo.id } }"> <button>Edit</button></RouterLink>
                 <button @click="deleteTodo(todo.id)">Delete</button>
             </li>
         </ul>
