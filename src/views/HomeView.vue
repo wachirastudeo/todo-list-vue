@@ -138,3 +138,8 @@ selectedStatus.value = newStatus
 </div>
   </div>
 </template>
+<style scoped>
+.btn-outline:hover {
+  fill: white;
+}
+</style>
