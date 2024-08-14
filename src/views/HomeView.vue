@@ -1,5 +1,5 @@
 <script>
-import { onMounted, ref } from "vue";
+import { onMounted, ref,computed } from "vue";
 import { useTodoStore } from "../stores/todo";
 import { RouterLink } from "vue-router";
 export default {
@@ -7,6 +7,11 @@ export default {
     const todoStore = useTodoStore();
     const todoText = ref("");
     const IsLoading = ref(false);
+    const selectedStatus = ref('Pending')
+
+  const filterTodoList = computed(()=>{
+    return todoStore.list.filter(todo=>todo.status===selectedStatus.value)
+  })
 
     onMounted(async () => {
       IsLoading.value = true;
@@ -50,6 +55,11 @@ export default {
        
 
     }
+const   changSelectedStatus=async(newStatus)=>{
+selectedStatus.value = newStatus
+
+}
+    
     return {
       todoStore,
       todoText,
@@ -58,12 +68,16 @@ export default {
       deleteTodo,
       IsLoading,
       changStatus,
+      selectedStatus, 
+      changSelectedStatus,
+      filterTodoList,
     };
   },
 };
 </script>
 
 <template>
+    <div class="flex items-center justify-center p-4">    <h1 >My Todo list</h1> </div>
   <div class="flex">
     <input
       class="input input-bordered w-full"
@@ -78,7 +92,19 @@ export default {
 
   </div>
 
-  <div class="flex items-center justify-between my-2" v-for="todo in todoStore.list" :key="todo.id">
+  <div class="tabs tabs-boxed my-2">
+
+
+    <a   :class="status === selectedStatus ? 'tab tab-active':'tab'"
+   v-for="status in todoStore.statuses"
+   @click="changSelectedStatus(status)"
+   >{{ status }}</a>
+  
+
+  
+</div>
+
+  <div class="flex items-center justify-between my-2" v-for="todo in filterTodoList" :key="todo.id">
     <input type="checkbox" :checked="todo.status=='Done'" class="checkbox" @change="changStatus($event,todo.id)" />
 
     <div :class="todo.status=='Done'? 'line-through':''">{{ todo.name }} </div>

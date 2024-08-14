@@ -57,7 +57,6 @@ export default {
     <div>
       Status:
       <select v-model="todoStore.selectedTodo.status">
-        <option>Select status</option>
         <option
           v-for="status in todoStore.statuses"
           :key="status"
