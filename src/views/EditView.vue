@@ -2,6 +2,7 @@
 import { useTodoStore } from "../stores/todo";
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
+import { RouterLink } from 'vue-router';
 
 export default {
   setup() {
@@ -15,18 +16,23 @@ export default {
         await todoStore.loadTodoById(route.params.id);
         todoId.value = parseInt(route.params.id);
         IsLoading.value = true;
-      } catch (error) {}
+      } catch (error) {
+        console.error('Failed to load todo:', error);
+      }
     });
+
     const editTodo = async (selectedTodo) => {
       try {
         const bodyTodo = {
           name: selectedTodo.name,
           status: selectedTodo.status
-        }
+        };
 
-        await todoStore.editTodo(bodyTodo, todoId);
-        alert('edit complete')
-      } catch (error) {}
+        await todoStore.editTodo(bodyTodo, todoId.value);
+        alert('Edit complete');
+      } catch (error) {
+        console.error('Failed to edit todo:', error);
+      }
     };
 
     return {
@@ -41,16 +47,16 @@ export default {
 
 <template>
   <div v-if="IsLoading">
-    id: {{ todoId }}
-    Name :
-    <input type="text" v-model="todoStore.selectedTodo.name" />
-
+    <div>
+      id: {{ todoId }}
+    </div>
+    <div>
+      Name:
+      <input type="text" v-model="todoStore.selectedTodo.name" />
+    </div>
     <div>
       Status:
-      <select
-        v-model="todoStore.selectedTodo.status"
-        @change="editStatus(todoId, todoStore.selectedTodo.status)"
-      >
+      <select v-model="todoStore.selectedTodo.status">
         <option>Select status</option>
         <option
           v-for="status in todoStore.statuses"
@@ -62,6 +68,7 @@ export default {
       </select>
     </div>
     <button @click="editTodo(todoStore.selectedTodo)">Edit</button>
+    <RouterLink :to="{ name: 'todo-list' }">Back</RouterLink>
   </div>
   <div v-else>Loading...</div>
 </template>
