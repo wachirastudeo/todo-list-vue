@@ -31,7 +31,10 @@ export default {
       await todoStore.loadTodos();
     };
     const changStatus = async(event,todoId)=>{
+        IsLoading.value = true;
+
         try {
+            
             if(event.target.checked){
             await todoStore.editTodo({status: 'Done'},todoId);
             
@@ -42,6 +45,8 @@ export default {
         } catch (error) {
             
         }
+        IsLoading.value = false;
+
        
 
     }
@@ -68,8 +73,9 @@ export default {
     />
     <button class="btn btn-primary ml-2" @click="addTodo(todoText)">Add</button>
   </div>
-  <div v-if="IsLoading">
-    <h2>Loading</h2>
+  <div v-if="IsLoading" class="flex item-center bg-black bg-opacity-10 fixed inset-0 justify-center" >
+    <span class="loading loading-dots loading-lg"></span>
+
   </div>
 
   <div class="flex items-center justify-between my-2" v-for="todo in todoStore.list" :key="todo.id">
