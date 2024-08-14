@@ -4,7 +4,8 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <template>
  
-
+<div class="max-w-3xl	mx-auto	my-0 p-4">
   <RouterView />
+</div>
 
 </template>
